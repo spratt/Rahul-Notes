@@ -1,0 +1,10 @@
+*.aux
+*.log
+*.bbl
+*.blg
+*.out
+*.vtc
+*.lof
+*.lot
+*.toc
+References/

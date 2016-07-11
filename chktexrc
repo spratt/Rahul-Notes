@@ -1,0 +1,11 @@
+#####################################################################
+#
+# Enter which type of  quote-style you are using here.  Currently, we
+# support the following styles:
+#
+#  Style        Example of use
+#  Traditional  "An example," he said, "would be great."
+#  Logical      "An example", he said, "would be great".
+#
+
+QuoteStyle = Traditional

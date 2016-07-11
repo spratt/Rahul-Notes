@@ -1,0 +1,77 @@
+\documentclass[letterpaper,12pt,twocolumn]{article}
+
+\usepackage{savetrees}
+\usepackage{xspace}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\newcommand\etal{\textit{et al.}\xspace}
+
+\newcommand{\BigOh}[1]{O\!\left(#1\right)}
+\newcommand\IR{\mathbb{R}}
+\newcommand\bounds[1]{(#1]} %chktex 9
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+
+\begin{document}
+
+{\noindent\Large Notes on Saladi 2015}\\
+{\noindent\large By Simon Pratt}
+
+The primary intention of these notes is to answer: how
+does~\cite{saladi2015improved} answer 3D 5-sided point enclosure
+queries?
+
+\paragraph{Orthogonal Point Enclosure Queries (OPEQ)}
+Preprocess a set $S$ of $n$ axes-parallel rectangles in $\IR^3$ in
+order to determine all rectangles containing a query point $q$.  In
+particular, we wish to consider the case in which a rectangle is
+5-sided.  To be precise, our rectangles are of the form
+$\bounds{x_1,x_2} \times \bounds{y_1, y_2} \times \bounds{-\infty,z}$.
+
+\section{Slow in Linear Space}
+
+In this section, we will prove the following:
+
+\begin{theorem}[2.1 in~\cite{saladi2015improved}]
+
+  OPEQ on 5-sided rectangles can be answered using a structure of
+  $\BigOh{n}$ size and $\BigOh{\log^3 n + k}$ query time, where $k$
+  is the size of the output.
+
+\end{theorem}
+
+TODO
+
+\section{Faster in Near-Linear Space}
+
+We can speed up the query time while nearly maintaining the space by
+using a grid technique from~\cite{alstrup2000new} and the following
+theorem on 4-sided rectangles of the form 
+$\bounds{x_1,x_2} \times \bounds{-\infty, y} \times \bounds{-\infty,z}$:
+
+\begin{theorem}[3.1 in~\cite{saladi2015improved}]
+
+  OPEQ on 4-sided rectangles can be answered using a structure of
+  $\BigOh{n\log^* n}$ size and $\BigOh{\log n \cdot \log^* n + k}$
+  query time, where $k$ is the size of the output.
+
+\end{theorem}
+
+TODO
+
+Which concludes the proof of the following:
+
+\begin{theorem}[5.1 in~\cite{saladi2015improved}]
+
+  OPEQ on 5-sided rectangles can be answered using a structure of
+  $\BigOh{n\log^* n}$ size and $\BigOh{\log n \log\log n + k}$ query
+  time, where $k$ is the size of the output.
+
+\end{theorem}
+
+\bibliographystyle{alpha}
+\bibliography{Saladi-Notes-References}
+
+\end{document} %chktex 17
