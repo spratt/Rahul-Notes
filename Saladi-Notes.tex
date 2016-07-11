@@ -91,8 +91,9 @@ perform at most $\BigOh{\log n}$ of these queries (one at each level
 of the interval tree), the total query time is $\BigOh{\log^2 n + k}$
 and space is still $\BigOh{n}$.  Call this structure \D{4}.  We can
 use the same technique to solve 5-sided queries in $\BigOh{\log^3 n +
-  k}$ time by storing \D{4} structures at the nodes of this interval
-tree instead.  This proves Theorem~\ref{thm:21}.
+  k}$ time by storing \D{4} structures at the nodes of the interval
+tree obtained by $y$-projection instead.  This proves
+Theorem~\ref{thm:21}.
 
 \section{Faster in Near-Linear Space}
 
@@ -120,6 +121,17 @@ Given two points $p,q \in \IR^d$, then $p = (p_1, \ldots, p_d)$
   dominates a point in $R$, and
 \item each point in $R$ is dominated by $\BigOh{t}$ points in $P$.
 \end{enumerate*}
+
+Note that we can reduce dominance of a point set $P$ in $\IR^3$ to
+planar point location in orthogonal subdivision by projecting the
+orthants whose corners are at the points of $P$ onto the plane, which
+we'll call the \emph{orthant projection}.  If we use the 4-sided to
+3-sided reduction above, then consider each 3-sided rectangle as a
+point, then we can take $\log^{(i)} n$-level shallow cuttings $R_i$
+for all $0 \le i \le \log^* n$.  On each $R_i$, build the structure
+from~\cite{afshani2008dominance}.  For each $R_i$, compute the orthant
+projection $\mathcal{A}_i$, then use~\cite{chazelle1986filtering} to
+solve OPEQ in 2D on all $A_i$ at once.
 
 Which concludes the proof of Theorem~\ref{thm:51}.
 
