@@ -13,15 +13,19 @@
 
 \newcommand{\BigOh}[1]{O\!\left(#1\right)}
 \newcommand\IR{\mathbb{R}}
-\newcommand\bounds[1]{(#1]} %chktex 9
+\newcommand\D[1]{$D_{#1}$}
+\newcommand\bounds[1]{[#1]}
+\newcommand\lbounds[1]{(#1]} %chktex 9
+\newcommand\rbounds[1]{[#1)} %chktex 9
+\newcommand\lrbounds[1]{(#1)}
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
 
 \begin{document}
 
-{\noindent\Large Notes on Saladi 2015}\\
-{\noindent\large By Simon Pratt}
+{\noindent\Large 5-Sided Orthogonal Point Enclosure}\\
+{\noindent Notes on Rahul 2015, by Simon Pratt}
 
 The primary intention of these notes is to answer: how
 does~\cite{saladi2015improved} answer 3D 5-sided point enclosure
@@ -32,7 +36,7 @@ Preprocess a set $S$ of $n$ axes-parallel rectangles in $\IR^3$ in
 order to determine all rectangles containing a query point $q$.  In
 particular, we wish to consider the case in which a rectangle is
 5-sided.  To be precise, our rectangles are of the form
-$\bounds{x_1,x_2} \times \bounds{y_1, y_2} \times \bounds{-\infty,z}$.
+$\bounds{x_1,x_2} \times \bounds{y_1, y_2} \times \lbounds{-\infty,z}$.
 
 \section{Simple and Slow in Linear Space}
 
@@ -52,20 +56,39 @@ each node $v$, store $\splt(v)$ which is the largest value in the left
 subtree of $v$, and $\range(v)$ which is $(-\infty,\infty)$ at the
 root, and otherwise if $\range(v) = [x_\ell, x_r]$, then $v$'s left
 child will have range $[x_\ell, \splt(v)]$, and symmetrically for the
-right child.  An interval is assigned to the node $v$ of minimal
-height such that the interval is contained within $\range(v)$.
-
-If we additionally maintain a list $IT_v^\ell$ (resp. $IT_v^r$) that
-stores the left (resp.\ right) endpoints of all intervals stored at $v$
-in non-decreasing (resp.\ non-increasing) order, then space remains
+right child.  An interval is stored at the node $v$ of minimal height
+such that the interval is contained within $\range(v)$.  If we
+additionally maintain a list $IT_v^\ell$ (resp. $IT_v^r$) that stores
+the left (resp.\ right) endpoints of all intervals stored at $v$ in
+non-decreasing (resp.\ non-increasing) order, then space remains
 $\BigOh{n}$, but we can answer a 1D OPEQ in $\BigOh{\log n + k}$ time.
+
+Note that 3D 3-sided OPEQ can been solved using $\BigOh{n}$ space in
+$\BigOh{\log n + k}$ query time by reduction to 3D dominance
+reporting~\cite{afshani2008dominance,makris2012improved}.  Call this
+structure \D{3}.
+
+Given a set of 4-sided rectangles of the form $\bounds{x_1,x_2} \times
+\lbounds{-\infty, y} \times \lbounds{-\infty,z}$, we can build an
+interval tree of all rectangles' projection onto the $x$-axis.
+Observe that at node $v$, if the query point $q$ is to the left of
+$\splt(v)$ then for each rectangle $r$ stored at $v$, $r$ contains $q$
+iff $q \in \rbounds{x_1, \infty} \times \lbounds{\infty, y} \times
+\lbounds{\infty, z}$, and similarly (but symmetrically) if $q$ is to
+the right of $\splt(v)$.  This effectively reduces the problem to a
+3-sided query, for which we can store \D{3} at each node.  Since we
+perform at most $\BigOh{\log n}$ of these queries (one at each level
+of the interval tree), the total query time is $\BigOh{\log^2 n + k}$
+and space is still $\BigOh{n}$.  Call this structure \D{4}.  We can
+use the same technique to solve 5-sided queries in $\BigOh{\log^3 n +
+  k}$ time by storing \D{4} structures at the nodes of this interval
+tree instead.
 
 \section{Faster in Near-Linear Space}
 
 We can speed up the query time while nearly maintaining the space by
 using a grid technique from~\cite{alstrup2000new} and the following
-theorem on 4-sided rectangles of the form 
-$\bounds{x_1,x_2} \times \bounds{-\infty, y} \times \bounds{-\infty,z}$:
+theorem:
 
 \begin{theorem}[3.1 in~\cite{saladi2015improved}]
 
