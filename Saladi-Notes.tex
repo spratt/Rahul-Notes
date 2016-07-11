@@ -4,6 +4,10 @@
 \usepackage{xspace}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{amsmath}
+
+\DeclareMathOperator{\splt}{split}
+\DeclareMathOperator{\range}{range}
 
 \newcommand\etal{\textit{et al.}\xspace}
 
@@ -30,7 +34,7 @@ particular, we wish to consider the case in which a rectangle is
 5-sided.  To be precise, our rectangles are of the form
 $\bounds{x_1,x_2} \times \bounds{y_1, y_2} \times \bounds{-\infty,z}$.
 
-\section{Slow in Linear Space}
+\section{Simple and Slow in Linear Space}
 
 In this section, we will prove the following:
 
@@ -42,7 +46,19 @@ In this section, we will prove the following:
 
 \end{theorem}
 
-TODO
+An \emph{interval tree} is a binary tree whose leaves store the values
+of the endpoints of a set of intervals~\cite{edelsbrunner1983new}.  At
+each node $v$, store $\splt(v)$ which is the largest value in the left
+subtree of $v$, and $\range(v)$ which is $(-\infty,\infty)$ at the
+root, and otherwise if $\range(v) = [x_\ell, x_r]$, then $v$'s left
+child will have range $[x_\ell, \splt(v)]$, and symmetrically for the
+right child.  An interval is assigned to the node $v$ of minimal
+height such that the interval is contained within $\range(v)$.
+
+If we additionally maintain a list $IT_v^\ell$ (resp. $IT_v^r$) that
+stores the left (resp.\ right) endpoints of all intervals stored at $v$
+in non-decreasing (resp.\ non-increasing) order, then space remains
+$\BigOh{n}$, but we can answer a 1D OPEQ in $\BigOh{\log n + k}$ time.
 
 \section{Faster in Near-Linear Space}
 
