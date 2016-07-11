@@ -2,6 +2,7 @@
 
 \usepackage{savetrees}
 \usepackage{xspace}
+\usepackage[inline]{enumitem}
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{amsmath}
@@ -36,13 +37,22 @@ Preprocess a set $S$ of $n$ axes-parallel rectangles in $\IR^3$ in
 order to determine all rectangles containing a query point $q$.  In
 particular, we wish to consider the case in which a rectangle is
 5-sided.  To be precise, our rectangles are of the form
-$\bounds{x_1,x_2} \times \bounds{y_1, y_2} \times \lbounds{-\infty,z}$.
+$\bounds{x_1,x_2} \times \bounds{y_1, y_2} \times
+\lbounds{-\infty,z}$.  In these notes, we will prove the following:
+
+\begin{theorem}[5.1 in~\cite{saladi2015improved}]\label{thm:51}
+
+  OPEQ on 5-sided rectangles can be answered using a structure of
+  $\BigOh{n\log^* n}$ size and $\BigOh{\log n \log\log n + k}$ query
+  time, where $k$ is the size of the output.
+
+\end{theorem}
 
 \section{Simple and Slow in Linear Space}
 
 In this section, we will prove the following:
 
-\begin{theorem}[2.1 in~\cite{saladi2015improved}]
+\begin{theorem}[2.1 in~\cite{saladi2015improved}]\label{thm:21}
 
   OPEQ on 5-sided rectangles can be answered using a structure of
   $\BigOh{n}$ size and $\BigOh{\log^3 n + k}$ query time, where $k$
@@ -58,10 +68,10 @@ root, and otherwise if $\range(v) = [x_\ell, x_r]$, then $v$'s left
 child will have range $[x_\ell, \splt(v)]$, and symmetrically for the
 right child.  An interval is stored at the node $v$ of minimal height
 such that the interval is contained within $\range(v)$.  If we
-additionally maintain a list $IT_v^\ell$ (resp. $IT_v^r$) that stores
-the left (resp.\ right) endpoints of all intervals stored at $v$ in
-non-decreasing (resp.\ non-increasing) order, then space remains
-$\BigOh{n}$, but we can answer a 1D OPEQ in $\BigOh{\log n + k}$ time.
+additionally maintain lists that store the left/right endpoints of all
+intervals stored at $v$ in non-decreasing/non-increasing order, then
+space remains $\BigOh{n}$, but we can answer a 1D OPEQ in $\BigOh{\log
+  n + k}$ time.
 
 Note that 3D 3-sided OPEQ can been solved using $\BigOh{n}$ space in
 $\BigOh{\log n + k}$ query time by reduction to 3D dominance
@@ -82,15 +92,16 @@ of the interval tree), the total query time is $\BigOh{\log^2 n + k}$
 and space is still $\BigOh{n}$.  Call this structure \D{4}.  We can
 use the same technique to solve 5-sided queries in $\BigOh{\log^3 n +
   k}$ time by storing \D{4} structures at the nodes of this interval
-tree instead.
+tree instead.  This proves Theorem~\ref{thm:21}.
 
 \section{Faster in Near-Linear Space}
 
-We can speed up the query time while nearly maintaining the space by
-using a grid technique from~\cite{alstrup2000new} and the following
-theorem:
+When $k \ge \log^3 n$, then Theorem~\ref{thm:21} gives $\BigOh{k}$
+query time.  Otherwise, we pre-compute partial answers to each query
+using a grid technique adapted from~\cite{alstrup2000new} and the
+following theorem:
 
-\begin{theorem}[3.1 in~\cite{saladi2015improved}]
+\begin{theorem}[3.1 in~\cite{saladi2015improved}]\label{thm:31}
 
   OPEQ on 4-sided rectangles can be answered using a structure of
   $\BigOh{n\log^* n}$ size and $\BigOh{\log n \cdot \log^* n + k}$
@@ -98,17 +109,19 @@ theorem:
 
 \end{theorem}
 
-TODO
+Given two points $p,q \in \IR^d$, then $p = (p_1, \ldots, p_d)$
+\emph{dominates} $q = (q_1, \ldots, q_d)$ if $p_i > q_i$ for all $i
+\in \{1, \ldots, d \}$.  Given a set of points $P$, $R$ is a
+\emph{$t$-level shallow cutting} of $P$ if
+%
+\begin{enumerate*}[label=(\roman*)]
+\item $|R| = \BigOh{n/t}$,
+\item any point $p$ that is dominated by at most $t$ points of $P$
+  dominates a point in $R$, and
+\item each point in $R$ is dominated by $\BigOh{t}$ points in $P$.
+\end{enumerate*}
 
-Which concludes the proof of the following:
-
-\begin{theorem}[5.1 in~\cite{saladi2015improved}]
-
-  OPEQ on 5-sided rectangles can be answered using a structure of
-  $\BigOh{n\log^* n}$ size and $\BigOh{\log n \log\log n + k}$ query
-  time, where $k$ is the size of the output.
-
-\end{theorem}
+Which concludes the proof of Theorem~\ref{thm:51}.
 
 \bibliographystyle{alpha}
 \bibliography{Saladi-Notes-References}
