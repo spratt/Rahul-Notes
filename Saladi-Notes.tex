@@ -143,19 +143,18 @@ projection, query the local structure.
 \section{5-Sided: Putting it all Together}
 
 We will use a grid technique adapted from~\cite{alstrup2000new}.  Let
-$t = \log^4 n$.  Project $S$ onto the plane, then draw an orthogonal
-$(2\sqrt{n/t})\times(2\sqrt{n/t})$ grid over the resulting rectangles
-such that each horizontal and vertical slab contains the projections
-of $\sqrt{nt}$ sides.  We create a tree by creating a node to store
-all rectangles on which we don't recurse, and recursing on all
-rectangles completely contained within a slab with $m$, the number of
-rectangles in the current subproblem, replacing $n$ wherever mentioned
-previously.  Stop recursion when $m$ reaches a constant.  At each node
-of this tree:
+$t = \lg^4 m$, where $m$ is the number of rectangles at the current
+level of recursion (initially $n$).  Project $S$ onto the plane, then
+draw an orthogonal $(2\sqrt{m/t})\times(2\sqrt{m/t})$ grid over the
+resulting rectangles such that each horizontal and vertical slab
+contains the projections of $\sqrt{nt}$ sides.  We create a tree by
+creating a node to store all rectangles which cross a grid line, then
+recurse on all other rectangles.  Stop recursion when $m$ reaches a
+constant.  At each node of this tree:
 %
 \begin{enumerate*}[label=(\roman*)] %chktex 36
 \item \emph{(slow)}: build the structure from Theorem~\ref{thm:21},
-\item \emph{($L_c$)}: for each grid cell $c$, store at most $\log^3 n$
+\item \emph{($L_c$)}: for each grid cell $c$, store at most $\lg^3 n$
   of the rectangles which completely cover $c$ in decreasing order of
   $z$ span, and
 \item \emph{(side)}: build the structure from Theorem~\ref{thm:31} on
@@ -185,9 +184,18 @@ scan $L_c$, reporting rectangles until
 
 If~\ref{enum:b}, then $k \ge \lg^3 n$, thus querying the slow
 structure gives $\BigOh{k}$ query time.  Otherwise, query the side
-structures then the recursive structures.  This uses $\BigOh{n\lg^*
-  n}$ space, querying this structure takes $\BigOh{\lg n\lg\lg n + k}$
-time, and this concludes the proof of Theorem~\ref{thm:51}.
+structures then the recursive structures.
+
+\paragraph{Space}
+The bottleneck is the structure from Theorem~\ref{thm:31} which
+occupies $\BigOh{n\lg^* n}$ space.
+
+\paragraph{Query Time}
+The bottleneck is the recursive case.  Since we can find the grid cell
+containing $q$ in $\BigOh{\lg n}$ time and the size of the subproblem
+is $\sqrt{nt}$, we get $Q(n) = Q(\sqrt{nt}) + \BigOh{\lg n}$.  With
+$t = \lg^4n$, this solves to $\BigOh{\lg n\lg\lg n + k}$ time, and
+this concludes the proof of Theorem~\ref{thm:51}.
 
 \bibliographystyle{alpha}
 \bibliography{Saladi-Notes-References}
