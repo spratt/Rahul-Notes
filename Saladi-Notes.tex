@@ -32,6 +32,7 @@
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
 
 \begin{document}
 
@@ -39,18 +40,18 @@
 {\noindent Notes on Rahul 2015, by Simon Pratt}
 
 The primary intention of these notes is to answer: how
-does~\cite{saladi2015improved} answer 3D 5-sided point enclosure
+does~\cite{rahul2015improved} answer 3D 5-sided point enclosure
 queries?
 
 \paragraph{Orthogonal Point Enclosure Queries (OPEQ)}
-Preprocess a set $S$ of $n$ axes-parallel rectangles in $\IR^3$ in
-order to determine all rectangles containing a query point $q$.  In
-particular, we wish to consider the case in which a rectangle is
-5-sided.  To be precise, our rectangles are of the form
+Preprocess a set $S$ of $n$ axes-parallel rectangles in order to
+determine all rectangles containing a query point $q$.  In particular,
+we wish to examine the case in which rectangles are 5-sided and in
+$\IR^3$.  To be precise, our rectangles are of the form
 $\bounds{x_1,x_2} \times \bounds{y_1, y_2} \times
 \lbounds{-\infty,z}$.  In these notes, we will prove the following:
 
-\begin{theorem}[5.1 in~\cite{saladi2015improved}]\label{thm:51}
+\begin{theorem}[5.1 in~\cite{rahul2015improved}]\label{thm:51}
 
   OPEQ on 5-sided rectangles can be answered using a structure of
   $\BigOh{n\lg^* n}$ size and $\BigOh{\lg n \lg\lg n + k}$ query time,
@@ -108,7 +109,7 @@ the same technique to solve 5-sided queries in $\BigOh{\lg^3 n + k}$
 time by storing \D{4} structures at the nodes of the interval tree
 obtained by $y$-projection instead.  This proves the following:
 
-\begin{theorem}[2.1 in~\cite{saladi2015improved}]\label{thm:21}
+\begin{theorem}[2.1 in~\cite{rahul2015improved}]\label{thm:21}
 
   OPEQ on 5-sided rectangles can be answered using a structure of
   $\BigOh{n}$ size and $\BigOh{\lg^3 n + k}$ query time, where $k$
@@ -140,24 +141,34 @@ Given two points $p,q \in \IR^d$, then $p = (p_1, \ldots, p_d)$
 \end{enumerate*}
 %
 First, project the rectangles onto the plane.  Then build an interval
-tree on the rectangles as we did in Section~\ref{sec:slow}, which such
-that at each node $v$, our 4-sided projections are stored as 3-sided
-rectangles either left or right of $\splt(v)$.  Consider each 3-sided
+tree on the rectangles as we did in Section~\ref{sec:slow}, such that
+at each node $v$, our 4-sided projections are stored as 3-sided
+rectangles either left or right of $\splt(v)$.
+
+At every node $v$ of the interval tree, consider each 3-sided
 rectangle as a point, then we can take $\lg^{(i)} n$-level shallow
 cuttings $R_i$ for all $0 \le i \le \lg^* n$.
 
-\textbf{Local Structure} On each shallow cutting $R_i$, build the
-structure from~\cite{afshani2008dominance}.
+\textbf{Local Structure} For each point $p \in R_i$, we
+build~\cite{afshani2008dominance} on all points that dominate $p$.
 
-\textbf{Global Structure} Note that we can reduce dominance of a point
-set $P$ in $\IR^3$ to planar point location in orthogonal subdivision
-by projecting the orthants whose corners are at the points of $P$ onto
-the plane, which we'll call the \emph{orthant projection}.  For each
-$R_i$, compute the orthant projection $\mathcal{A}_i$, then store all
-such projections in~\cite{chazelle1986filtering}.
+\begin{lemma}[3.1 in~\cite{rahul2015improved}]\label{lem:31}
 
-To answer a query, first find all orthant projections which enclose
-the query point by querying the global structure, then for each such
+  Given a point set $P$ in $\IR^3$ and a strip $\mathcal{R}$ of the
+  plane such that the projection of all points onto the plane falls
+  within $\mathcal{R}$, we can compute a subdivision $\mathcal{A}$ of
+  $\mathcal{R}$ with $|R|$ regions such that given a query point $p$
+  in the plane, we can either find a point of $P$ which dominates $p$,
+  or no such point exists.
+
+\end{lemma}
+
+\textbf{Global Structure} For each $R_i$, compute the
+Lemma~\ref{lem:31} arrangement $\mathcal{A}_i$, then store all such
+projections in~\cite{chazelle1986filtering}.
+
+To answer a query, first query the global structure to find all
+orthant projections that enclose the query point, then for each such
 projection, query the local structure.
 
 \textbf{Space} The local structure for each shallow cutting $R_i$
@@ -171,7 +182,7 @@ the interval tree.
 $\BigOh{n}$ space and $\BigOh{\lg^{(c + 1)}n + k}$ query time by only
 taking $c \ge 2$ shallow cuttings.
 
-\begin{theorem}[3.1 in~\cite{saladi2015improved}]\label{thm:31}
+\begin{theorem}[3.1 in~\cite{rahul2015improved}]\label{thm:31}
 
   OPEQ on 4-sided rectangles can be answered using a structure of
   $\BigOh{n\lg^* n}$ size and $\BigOh{\lg n \cdot \lg^* n + k}$
