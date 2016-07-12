@@ -3,6 +3,7 @@
 \usepackage[subtle,margins]{savetrees}
 \usepackage{xspace}
 \usepackage[inline]{enumitem}
+\usepackage{graphicx}
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{amsmath}
@@ -158,8 +159,21 @@ of this tree:
   of the rectangles which completely cover $c$ in decreasing order of
   $z$ span, and
 \item \emph{(side)}: build the structure from Theorem~\ref{thm:31} on
-  the (at most 4) sides cut from each rectangle by the grid.
+  the (at most 4) sides cut from each rectangle by the grid (see
+  Figure~\ref{fig:grid:decomposition}).
 \end{enumerate*}
+
+\begin{figure}[t!]
+  \centering
+    \includegraphics[width=0.10\textwidth,page=1]{figures/grid-decomposition}
+    \includegraphics[width=0.10\textwidth,page=2]{figures/grid-decomposition}
+    \includegraphics[width=0.10\textwidth,page=4]{figures/grid-decomposition}
+    \includegraphics[width=0.10\textwidth,page=3]{figures/grid-decomposition}
+  \caption[Grid decomposition]{A rectangle (left) decomposes into an
+    number of totally covered cells (middle-left), sides contained in
+    adjacent vertical slabs (middle-right), and sides contained in
+    adjacent horizontal slabs (right).}\label{fig:grid:decomposition}
+\end{figure}
 
 To answer a query $q$, locate the grid cell $c$ containing $q$ and
 scan $L_c$, reporting rectangles until
