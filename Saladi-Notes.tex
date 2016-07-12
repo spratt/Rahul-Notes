@@ -1,6 +1,6 @@
 \documentclass[letterpaper,12pt,twocolumn]{article}
 
-\usepackage{savetrees}
+\usepackage[subtle,margins]{savetrees}
 \usepackage{xspace}
 \usepackage[inline]{enumitem}
 \usepackage{amssymb}
@@ -49,12 +49,13 @@ $\bounds{x_1,x_2} \times \bounds{y_1, y_2} \times
 
 \end{theorem}
 
-We will use the following tools:
+We will use the following results:
 
 \noindent\begin{tabular}{lccr}
     \toprule
     Problem & Query & Space & Reference \\
     \midrule
+    %1D 2-side OPEQ & $\BigOh{\lg n + k}$ & $\BigOh{n}$ & \cite{edelsbrunner1983new} \\ %chktex 2
     2D 4-side OPEQ & $\BigOh{\lg n + k}$ & $\BigOh{n}$ & \cite{chazelle1986filtering} \\ %chktex 2
     3D 3-side OPEQ & $\BigOh{\lg n + k}$ & $\BigOh{n}$ & \cite{afshani2008dominance} \\ %chktex 2
     \bottomrule
@@ -152,18 +153,27 @@ previously.  Stop recursion when $m$ reaches a constant.  At each node
 of this tree:
 %
 \begin{enumerate*}[label=(\roman*)] %chktex 36
-\item build the structure from Theorem~\ref{thm:21},
-\item for each grid cell $c$, store at most $\log^3 n$ of the
-  rectangles which completely cover $c$ in decreasing order of $z$
-  span, and
-\item build the structure from Theorem~\ref{thm:31} on the (at most 4)
-  sides cut from each rectangle by the grid.
+\item \emph{(slow)}: build the structure from Theorem~\ref{thm:21},
+\item \emph{($L_c$)}: for each grid cell $c$, store at most $\log^3 n$
+  of the rectangles which completely cover $c$ in decreasing order of
+  $z$ span, and
+\item \emph{(side)}: build the structure from Theorem~\ref{thm:31} on
+  the (at most 4) sides cut from each rectangle by the grid.
 \end{enumerate*}
 
-If BLAH, then $k \ge \lg^3 n$, thus querying the structure from
-Theorem~\ref{thm:21} gives $\BigOh{k}$ query time.
+To answer a query $q$, locate the grid cell $c$ containing $q$ and
+scan $L_c$, reporting rectangles until
+%
+\begin{enumerate*}[label=(\alph*)] %chktex 36
+\item\label{enum:a} we find a rectangle not containing $q$, or
+\item\label{enum:b} we reach the end.
+\end{enumerate*}
 
-This concludes the proof of Theorem~\ref{thm:51}.
+If~\ref{enum:b}, then $k \ge \lg^3 n$, thus querying the slow
+structure gives $\BigOh{k}$ query time.  Otherwise, query the side
+structures then the recursive structures.  This uses $\BigOh{n\lg^*
+  n}$ space, querying this structure takes $\BigOh{\lg n\lg\lg n + k}$
+time, and this concludes the proof of Theorem~\ref{thm:51}.
 
 \bibliographystyle{alpha}
 \bibliography{Saladi-Notes-References}
