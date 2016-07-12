@@ -4,10 +4,16 @@
 \usepackage{xspace}
 \usepackage[inline]{enumitem}
 \usepackage{graphicx}
+\usepackage{anyfontsize}
+\usepackage{sectsty}
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{booktabs}
+
+\sectionfont{\fontsize{13}{18}\selectfont}
+
+\newcommand\lspace{\hspace{-0.5em}}
 
 \DeclareMathOperator{\splt}{split}
 \DeclareMathOperator{\range}{range}
@@ -62,7 +68,7 @@ We will use the following results:
     \bottomrule
 \end{tabular}
 
-\section{5-Sided: Simple and Slow in Linear Space}
+\section{\lspace{} 5-Sided: Slow with Linear Space}
 
 An \emph{interval tree} is a binary tree whose leaves store the values
 of the endpoints of a set of intervals~\cite{edelsbrunner1983new}.  At
@@ -102,7 +108,7 @@ This proves the following:
 
 \end{theorem}
 
-\section{4-Sided: Faster in Near-Linear Space}
+\section{\lspace{} 4-Sided: Faster with Near-Linear Space}
 
 Given two points $p,q \in \IR^d$, then $p = (p_1, \ldots, p_d)$
 \emph{dominates} $q = (q_1, \ldots, q_d)$ if $p_i > q_i$ for all $i
@@ -140,7 +146,7 @@ projection, query the local structure.
 
 \end{theorem}
 
-\section{5-Sided: Putting it all Together}
+\section{\lspace{} 5-Sided: Putting it all Together}
 
 We will use a grid technique adapted from~\cite{alstrup2000new}.  Let
 $t = \lg^4 m$, where $m$ is the number of rectangles at the current
