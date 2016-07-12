@@ -6,6 +6,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{amsmath}
+\usepackage{booktabs}
 
 \DeclareMathOperator{\splt}{split}
 \DeclareMathOperator{\range}{range}
@@ -43,22 +44,23 @@ $\bounds{x_1,x_2} \times \bounds{y_1, y_2} \times
 \begin{theorem}[5.1 in~\cite{saladi2015improved}]\label{thm:51}
 
   OPEQ on 5-sided rectangles can be answered using a structure of
-  $\BigOh{n\log^* n}$ size and $\BigOh{\log n \log\log n + k}$ query
-  time, where $k$ is the size of the output.
+  $\BigOh{n\lg^* n}$ size and $\BigOh{\lg n \lg\lg n + k}$ query time,
+  where $k$ is the size of the output.
 
 \end{theorem}
 
-\section{Simple and Slow in Linear Space}
+We will use the following tools:
 
-In this section, we will prove the following:
+\noindent\begin{tabular}{lccr}
+    \toprule
+    Problem & Query & Space & Reference \\
+    \midrule
+    2D 4-side OPEQ & $\BigOh{\lg n + k}$ & $\BigOh{n}$ & \cite{chazelle1986filtering} \\ %chktex 2
+    3D 3-side OPEQ & $\BigOh{\lg n + k}$ & $\BigOh{n}$ & \cite{afshani2008dominance} \\ %chktex 2
+    \bottomrule
+\end{tabular}
 
-\begin{theorem}[2.1 in~\cite{saladi2015improved}]\label{thm:21}
-
-  OPEQ on 5-sided rectangles can be answered using a structure of
-  $\BigOh{n}$ size and $\BigOh{\log^3 n + k}$ query time, where $k$
-  is the size of the output.
-
-\end{theorem}
+\section{5-Sided: Simple and Slow in Linear Space}
 
 An \emph{interval tree} is a binary tree whose leaves store the values
 of the endpoints of a set of intervals~\cite{edelsbrunner1983new}.  At
@@ -70,13 +72,8 @@ right child.  An interval is stored at the node $v$ of minimal height
 such that the interval is contained within $\range(v)$.  If we
 additionally maintain lists that store the left/right endpoints of all
 intervals stored at $v$ in non-decreasing/non-increasing order, then
-space remains $\BigOh{n}$, but we can answer a 1D OPEQ in $\BigOh{\log
+space remains $\BigOh{n}$, but we can answer a 1D OPEQ in $\BigOh{\lg
   n + k}$ time.
-
-Note that 3D 3-sided OPEQ can been solved using $\BigOh{n}$ space in
-$\BigOh{\log n + k}$ query time by reduction to 3D dominance
-reporting~\cite{afshani2008dominance,makris2012improved}.  Call this
-structure \D{3}.
 
 Given a set of 4-sided rectangles of the form $\bounds{x_1,x_2} \times
 \lbounds{-\infty, y} \times \lbounds{-\infty,z}$, we can build an
@@ -86,36 +83,31 @@ $\splt(v)$ then for each rectangle $r$ stored at $v$, $r$ contains $q$
 iff $q \in \rbounds{x_1, \infty} \times \lbounds{\infty, y} \times
 \lbounds{\infty, z}$, and similarly (but symmetrically) if $q$ is to
 the right of $\splt(v)$.  This effectively reduces the problem to a
-3-sided query, for which we can store \D{3} at each node.  Since we
-perform at most $\BigOh{\log n}$ of these queries (one at each level
-of the interval tree), the total query time is $\BigOh{\log^2 n + k}$
-and space is still $\BigOh{n}$.  Call this structure \D{4}.  We can
-use the same technique to solve 5-sided queries in $\BigOh{\log^3 n +
-  k}$ time by storing \D{4} structures at the nodes of the interval
-tree obtained by $y$-projection instead.  This proves
-Theorem~\ref{thm:21}.
+3-sided query, for which we can store~\cite{afshani2008dominance} at
+each node.  Since we perform at most $\BigOh{\lg n}$ of these queries
+(one at each level of the interval tree), the total query time is
+$\BigOh{\lg^2 n + k}$ and space is still $\BigOh{n}$.  Call this
+structure \D{4}.  We can use the same technique to solve 5-sided
+queries in $\BigOh{\lg^3 n + k}$ time by storing \D{4} structures at
+the nodes of the interval tree obtained by $y$-projection instead.
+This proves the following:
 
-\section{Faster in Near-Linear Space}
+\begin{theorem}[2.1 in~\cite{saladi2015improved}]\label{thm:21}
 
-When $k \ge \log^3 n$, then Theorem~\ref{thm:21} gives $\BigOh{k}$
-query time.  Otherwise, we pre-compute partial answers to each query
-using a grid technique adapted from~\cite{alstrup2000new} and the
-following theorem:
-
-\begin{theorem}[3.1 in~\cite{saladi2015improved}]\label{thm:31}
-
-  OPEQ on 4-sided rectangles can be answered using a structure of
-  $\BigOh{n\log^* n}$ size and $\BigOh{\log n \cdot \log^* n + k}$
-  query time, where $k$ is the size of the output.
+  OPEQ on 5-sided rectangles can be answered using a structure of
+  $\BigOh{n}$ size and $\BigOh{\lg^3 n + k}$ query time, where $k$
+  is the size of the output.
 
 \end{theorem}
+
+\section{4-Sided: Faster in Near-Linear Space}
 
 Given two points $p,q \in \IR^d$, then $p = (p_1, \ldots, p_d)$
 \emph{dominates} $q = (q_1, \ldots, q_d)$ if $p_i > q_i$ for all $i
 \in \{1, \ldots, d \}$.  Given a set of points $P$, $R$ is a
 \emph{$t$-level shallow cutting} of $P$ if
 %
-\begin{enumerate*}[label=(\roman*)]
+\begin{enumerate*}[label=(\roman*)] %chktex 36
 \item $|R| = \BigOh{n/t}$,
 \item any point $p$ that is dominated by at most $t$ points of $P$
   dominates a point in $R$, and
@@ -127,13 +119,51 @@ planar point location in orthogonal subdivision by projecting the
 orthants whose corners are at the points of $P$ onto the plane, which
 we'll call the \emph{orthant projection}.  If we use the 4-sided to
 3-sided reduction above, then consider each 3-sided rectangle as a
-point, then we can take $\log^{(i)} n$-level shallow cuttings $R_i$
-for all $0 \le i \le \log^* n$.  On each $R_i$, build the structure
-from~\cite{afshani2008dominance}.  For each $R_i$, compute the orthant
-projection $\mathcal{A}_i$, then use~\cite{chazelle1986filtering} to
-solve OPEQ in 2D on all $A_i$ at once.
+point, then we can take $\lg^{(i)} n$-level shallow cuttings $R_i$ for
+all $0 \le i \le \lg^* n$.  \textbf{Local Structure}: on each $R_i$,
+build the structure from~\cite{afshani2008dominance}.  \textbf{Global
+  Structure}: for each $R_i$, compute the orthant projection
+$\mathcal{A}_i$, then store all such projections
+in~\cite{chazelle1986filtering}.
 
-Which concludes the proof of Theorem~\ref{thm:51}.
+To answer a query, first find all orthant projections which enclose
+the query point by querying the global structure, then for each such
+projection, query the local structure.
+
+\begin{theorem}[3.1 in~\cite{saladi2015improved}]\label{thm:31}
+
+  OPEQ on 4-sided rectangles can be answered using a structure of
+  $\BigOh{n\lg^* n}$ size and $\BigOh{\lg n \cdot \lg^* n + k}$
+  query time, where $k$ is the size of the output.
+
+\end{theorem}
+
+\section{5-Sided: Putting it all Together}
+
+We will use a grid technique adapted from~\cite{alstrup2000new}.  Let
+$t = \log^4 n$.  Project $S$ onto the plane, then draw an orthogonal
+$(2\sqrt{n/t})\times(2\sqrt{n/t})$ grid over the resulting rectangles
+such that each horizontal and vertical slab contains the projections
+of $\sqrt{nt}$ sides.  We create a tree by creating a node to store
+all rectangles on which we don't recurse, and recursing on all
+rectangles completely contained within a slab with $m$, the number of
+rectangles in the current subproblem, replacing $n$ wherever mentioned
+previously.  Stop recursion when $m$ reaches a constant.  At each node
+of this tree:
+%
+\begin{enumerate*}[label=(\roman*)] %chktex 36
+\item build the structure from Theorem~\ref{thm:21},
+\item for each grid cell $c$, store at most $\log^3 n$ of the
+  rectangles which completely cover $c$ in decreasing order of $z$
+  span, and
+\item build the structure from Theorem~\ref{thm:31} on the (at most 4)
+  sides cut from each rectangle by the grid.
+\end{enumerate*}
+
+If BLAH, then $k \ge \lg^3 n$, thus querying the structure from
+Theorem~\ref{thm:21} gives $\BigOh{k}$ query time.
+
+This concludes the proof of Theorem~\ref{thm:51}.
 
 \bibliographystyle{alpha}
 \bibliography{Saladi-Notes-References}
