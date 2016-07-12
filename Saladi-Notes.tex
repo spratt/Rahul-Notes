@@ -1,6 +1,8 @@
 \documentclass[letterpaper,12pt,twocolumn]{article}
 
 \usepackage[subtle,margins]{savetrees}
+%\usepackage[moderate,margins]{savetrees}
+%\usepackage[extreme]{savetrees}
 \usepackage{xspace}
 \usepackage[inline]{enumitem}
 \usepackage{graphicx}
@@ -56,7 +58,12 @@ $\bounds{x_1,x_2} \times \bounds{y_1, y_2} \times
 
 \end{theorem}
 
-We will use the following results:
+At a high level, we will use interval trees to solve 5-sided queries
+in $\BigOh{\lg^3 n + k}$ time, which is good for $k \ge \lg^3 n$.
+Otherwise, we'll use grids to break the structure into 4-sided queries
+which we solve with $\BigOh{n\lg^* n}$ space and $\BigOh{\lg n\lg^* n
+  + k}$ query time using interval trees, shallow cuttings, and the
+following results:
 
 \noindent\begin{tabular}{lccr}
     \toprule
@@ -68,7 +75,8 @@ We will use the following results:
     \bottomrule
 \end{tabular}
 
-\section{\lspace{} 5-Sided: Slow with Linear Space}
+\section{\lspace{} 5-Sided: Slow/Simple with Linear Space}
+\label{sec:slow}
 
 An \emph{interval tree} is a binary tree whose leaves store the values
 of the endpoints of a set of intervals~\cite{edelsbrunner1983new}.  At
@@ -92,13 +100,13 @@ iff $q \in \rbounds{x_1, \infty} \times \lbounds{\infty, y} \times
 \lbounds{\infty, z}$, and similarly (but symmetrically) if $q$ is to
 the right of $\splt(v)$.  This effectively reduces the problem to a
 3-sided query, for which we can store~\cite{afshani2008dominance} at
-each node.  Since we perform at most $\BigOh{\lg n}$ of these queries
-(one at each level of the interval tree), the total query time is
-$\BigOh{\lg^2 n + k}$ and space is still $\BigOh{n}$.  Call this
-structure \D{4}.  We can use the same technique to solve 5-sided
-queries in $\BigOh{\lg^3 n + k}$ time by storing \D{4} structures at
-the nodes of the interval tree obtained by $y$-projection instead.
-This proves the following:
+each node (see Figure~\ref{fig:4sided:3sided}).  Since we perform at
+most $\BigOh{\lg n}$ of these queries (one at each level of the
+interval tree), the total query time is $\BigOh{\lg^2 n + k}$ and
+space is still $\BigOh{n}$.  Call this structure \D{4}.  We can use
+the same technique to solve 5-sided queries in $\BigOh{\lg^3 n + k}$
+time by storing \D{4} structures at the nodes of the interval tree
+obtained by $y$-projection instead.  This proves the following:
 
 \begin{theorem}[2.1 in~\cite{saladi2015improved}]\label{thm:21}
 
@@ -108,7 +116,16 @@ This proves the following:
 
 \end{theorem}
 
+\begin{figure}[t!]
+  \centering
+    \includegraphics[width=0.20\textwidth,page=1]{figures/4-sided-to-3-sided}
+  \caption[4-sided to 3-sided]{A 4-sided rectangle stored at $v$ is
+    reduced to 3-sided rectangles on either side of $\splt(v)$ in an
+    interval tree.}\label{fig:4sided:3sided}
+\end{figure}
+
 \section{\lspace{} 4-Sided: Faster with Near-Linear Space}
+\label{sec:4sided}
 
 Given two points $p,q \in \IR^d$, then $p = (p_1, \ldots, p_d)$
 \emph{dominates} $q = (q_1, \ldots, q_d)$ if $p_i > q_i$ for all $i
@@ -121,22 +138,38 @@ Given two points $p,q \in \IR^d$, then $p = (p_1, \ldots, p_d)$
   dominates a point in $R$, and
 \item each point in $R$ is dominated by $\BigOh{t}$ points in $P$.
 \end{enumerate*}
+%
+First, project the rectangles onto the plane.  Then build an interval
+tree on the rectangles as we did in Section~\ref{sec:slow}, which such
+that at each node $v$, our 4-sided projections are stored as 3-sided
+rectangles either left or right of $\splt(v)$.  Consider each 3-sided
+rectangle as a point, then we can take $\lg^{(i)} n$-level shallow
+cuttings $R_i$ for all $0 \le i \le \lg^* n$.
 
-Note that we can reduce dominance of a point set $P$ in $\IR^3$ to
-planar point location in orthogonal subdivision by projecting the
-orthants whose corners are at the points of $P$ onto the plane, which
-we'll call the \emph{orthant projection}.  If we use the 4-sided to
-3-sided reduction above, then consider each 3-sided rectangle as a
-point, then we can take $\lg^{(i)} n$-level shallow cuttings $R_i$ for
-all $0 \le i \le \lg^* n$.  \textbf{Local Structure}: on each $R_i$,
-build the structure from~\cite{afshani2008dominance}.  \textbf{Global
-  Structure}: for each $R_i$, compute the orthant projection
-$\mathcal{A}_i$, then store all such projections
-in~\cite{chazelle1986filtering}.
+\textbf{Local Structure} On each shallow cutting $R_i$, build the
+structure from~\cite{afshani2008dominance}.
+
+\textbf{Global Structure} Note that we can reduce dominance of a point
+set $P$ in $\IR^3$ to planar point location in orthogonal subdivision
+by projecting the orthants whose corners are at the points of $P$ onto
+the plane, which we'll call the \emph{orthant projection}.  For each
+$R_i$, compute the orthant projection $\mathcal{A}_i$, then store all
+such projections in~\cite{chazelle1986filtering}.
 
 To answer a query, first find all orthant projections which enclose
 the query point by querying the global structure, then for each such
 projection, query the local structure.
+
+\textbf{Space} The local structure for each shallow cutting $R_i$
+takes $\BigOh{n}$ space, and there are $\lg^* n$ such cuttings.
+
+\textbf{Query Time} Querying the local structure takes $\BigOh{\lg^*
+  n}$ time and is performed at each of the $\BigOh{\lg n}$ levels of
+the interval tree.
+
+\textbf{Remark} You can instead build a data structure with
+$\BigOh{n}$ space and $\BigOh{\cdot \lg^{(c + 1)}n + k}$ query time by
+only taking $c \ge 2$ shallow cuttings.
 
 \begin{theorem}[3.1 in~\cite{saladi2015improved}]\label{thm:31}
 
@@ -146,7 +179,8 @@ projection, query the local structure.
 
 \end{theorem}
 
-\section{\lspace{} 5-Sided: Putting it all Together}
+\section{\lspace{} 5-Sided: Putting it Together with Grids}
+\label{sec:5sided}
 
 We will use a grid technique adapted from~\cite{alstrup2000new}.  Let
 $t = \lg^4 m$, where $m$ is the number of rectangles at the current
@@ -168,18 +202,6 @@ constant.  At each node of this tree:
   Figure~\ref{fig:grid:decomposition}).
 \end{enumerate*}
 
-\begin{figure}[t!]
-  \centering
-    \includegraphics[width=0.10\textwidth,page=1]{figures/grid-decomposition}
-    \includegraphics[width=0.10\textwidth,page=2]{figures/grid-decomposition}
-    \includegraphics[width=0.10\textwidth,page=4]{figures/grid-decomposition}
-    \includegraphics[width=0.10\textwidth,page=3]{figures/grid-decomposition}
-  \caption[Grid decomposition]{A rectangle (left) decomposes into an
-    number of totally covered cells (middle-left), sides contained in
-    adjacent vertical slabs (middle-right), and sides contained in
-    adjacent horizontal slabs (right).}\label{fig:grid:decomposition}
-\end{figure}
-
 To answer a query $q$, locate the grid cell $c$ containing $q$ and
 scan $L_c$, reporting rectangles until
 %
@@ -192,16 +214,32 @@ If~\ref{enum:b}, then $k \ge \lg^3 n$, thus querying the slow
 structure gives $\BigOh{k}$ query time.  Otherwise, query the side
 structures then the recursive structures.
 
-\paragraph{Space}
-The bottleneck is the structure from Theorem~\ref{thm:31} which
-occupies $\BigOh{n\lg^* n}$ space.
+\textbf{Space} The bottleneck is the structure from
+Theorem~\ref{thm:31} which occupies $\BigOh{n\lg^* n}$ space.
 
-\paragraph{Query Time}
-The bottleneck is the recursive case.  Since we can find the grid cell
-containing $q$ in $\BigOh{\lg n}$ time and the size of the subproblem
-is $\sqrt{nt}$, we get $Q(n) = Q(\sqrt{nt}) + \BigOh{\lg n}$.  With
-$t = \lg^4n$, this solves to $\BigOh{\lg n\lg\lg n + k}$ time, and
-this concludes the proof of Theorem~\ref{thm:51}.
+\textbf{Query Time} The bottleneck is the recursive case.  Since we
+can find the grid cell containing $q$ in $\BigOh{\lg n}$ time and the
+size of the subproblem is $\sqrt{nt}$, we get $Q(n) = Q(\sqrt{nt}) +
+\BigOh{\lg n}$.  With $t = \lg^4n$, this solves to $\BigOh{\lg n\lg\lg
+  n + k}$ time, and this concludes the proof of Theorem~\ref{thm:51}.
+
+\textbf{Remark} In the RAM model, we can find the grid cell containing
+$q$ in $\BigOh{1}$ time.  This suggests we can achieve $\BigOh{\lg\lg
+  n + k}$ query time.  Also, if Theorem~\ref{thm:31} is not the time
+bottleneck, we can use the time-space trade-off to achieve $\BigOh{n}$
+space.
+
+\begin{figure}[t!]
+  \centering
+    \includegraphics[width=0.10\textwidth,page=1]{figures/grid-decomposition}
+    \includegraphics[width=0.10\textwidth,page=2]{figures/grid-decomposition}
+    \includegraphics[width=0.10\textwidth,page=4]{figures/grid-decomposition}
+    \includegraphics[width=0.10\textwidth,page=3]{figures/grid-decomposition}
+  \caption[Grid decomposition]{A rectangle (left) decomposes into an
+    number of totally covered cells (middle-left), sides contained in
+    adjacent vertical slabs (middle-right), and sides contained in
+    adjacent horizontal slabs (right).}\label{fig:grid:decomposition}
+\end{figure}
 
 \bibliographystyle{alpha}
 \bibliography{Saladi-Notes-References}
