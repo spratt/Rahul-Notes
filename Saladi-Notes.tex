@@ -69,9 +69,9 @@ following results:
     \toprule
     Problem & Query & Space & Reference \\
     \midrule
-    %1D 2-side OPEQ & $\BigOh{\lg n + k}$ & $\BigOh{n}$ & \cite{edelsbrunner1983new} \\ %chktex 2
-    2D 4-side OPEQ & $\BigOh{\lg n + k}$ & $\BigOh{n}$ & \cite{chazelle1986filtering} \\ %chktex 2
-    3D 3-side OPEQ & $\BigOh{\lg n + k}$ & $\BigOh{n}$ & \cite{afshani2008dominance} \\ %chktex 2
+    %1D 2-sided OPEQ & $\BigOh{\lg n + k}$ & $\BigOh{n}$ & \cite{edelsbrunner1983new} \\ %chktex 2
+    2D 4-sided OPEQ & $\BigOh{\lg n + k}$ & $\BigOh{n}$ & \cite{chazelle1986filtering} \\ %chktex 2
+    3D 3-sided OPEQ & $\BigOh{\lg n + k}$ & $\BigOh{n}$ & \cite{afshani2008dominance} \\ %chktex 2
     \bottomrule
 \end{tabular}
 
@@ -168,8 +168,8 @@ takes $\BigOh{n}$ space, and there are $\lg^* n$ such cuttings.
 the interval tree.
 
 \textbf{Remark} You can instead build a data structure with
-$\BigOh{n}$ space and $\BigOh{\cdot \lg^{(c + 1)}n + k}$ query time by
-only taking $c \ge 2$ shallow cuttings.
+$\BigOh{n}$ space and $\BigOh{\lg^{(c + 1)}n + k}$ query time by only
+taking $c \ge 2$ shallow cuttings.
 
 \begin{theorem}[3.1 in~\cite{saladi2015improved}]\label{thm:31}
 
