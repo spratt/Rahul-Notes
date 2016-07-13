@@ -1,7 +1,7 @@
 \documentclass[letterpaper,12pt,twocolumn]{article}
 
-\usepackage[subtle,margins]{savetrees}
-%\usepackage[moderate,margins]{savetrees}
+%\usepackage[subtle,margins]{savetrees}
+\usepackage[moderate,margins]{savetrees}
 %\usepackage[extreme]{savetrees}
 \usepackage{xspace}
 \usepackage[inline]{enumitem}
@@ -151,6 +151,8 @@ cuttings $R_i$ for all $0 \le i \le \lg^* n$.
 
 \textbf{Local Structure} For each point $p \in R_i$, we
 build~\cite{afshani2008dominance} on all points that dominate $p$.
+Since $p$ is in a $\lg^{(i)} n$-level shallow cutting of $P$, there
+are $\BigOh{\lg^{(i)} n}$ points that dominate $p$.
 
 \begin{lemma}[3.1 in~\cite{rahul2015improved}]\label{lem:31}
 
@@ -163,20 +165,23 @@ build~\cite{afshani2008dominance} on all points that dominate $p$.
 
 \end{lemma}
 
-\textbf{Global Structure} For each $R_i$, compute the
-Lemma~\ref{lem:31} subdivision $\mathcal{A}_i$, then store all the
-rectangles from these subdivisions in~\cite{chazelle1986filtering}.
+\textbf{Global Structure} For every node $v$ in the interval tree, for
+each $R_i$, compute the Lemma~\ref{lem:31} subdivision
+$\mathcal{A}_i$, then store all the rectangles from these subdivisions
+in~\cite{chazelle1986filtering}.
 
-To answer a query, first query the global structure to find all
-orthant projections that enclose the query point, then for each such
-projection, query the local structure.
+To answer a query $q$, first query the global structure to find the
+largest $i$ such that a point $p$ corresponding to a rectangle from
+$\mathcal{A}_i$ encloses the query point.  Then search the local
+structure of $p$, reporting all points (corresponding to rectangles of
+the input) that dominate $q$.
 
 \textbf{Space} The local structure for each shallow cutting $R_i$
 takes $\BigOh{n}$ space, and there are $\lg^* n$ such cuttings.
 
-\textbf{Query Time} Querying the local structure takes $\BigOh{\lg^*
-  n}$ time and is performed at each of the $\BigOh{\lg n}$ levels of
-the interval tree.
+\textbf{Query Time} Each of the $\BigOh{\lg n}$ nodes on the root to
+leaf path of the interval tree could return up to $\BigOh{\lg^* n}$
+rectangles.
 
 \textbf{Remark} You can instead build a data structure with
 $\BigOh{n}$ space and $\BigOh{\lg^{(c + 1)}n + k}$ query time by only
