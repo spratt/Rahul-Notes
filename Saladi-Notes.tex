@@ -139,7 +139,7 @@ Given two points $p,q \in \IR^d$, then $p = (p_1, \ldots, p_d)$
   dominates a point in $R$, and
 \item each point in $R$ is dominated by $\BigOh{t}$ points in $P$.
 \end{enumerate*}
-%
+
 First, project the rectangles onto the plane.  Then build an interval
 tree on the rectangles as we did in Section~\ref{sec:slow}, such that
 at each node $v$, our 4-sided projections are stored as 3-sided
@@ -184,7 +184,7 @@ leaf path of the interval tree could return up to $\BigOh{\lg^* n}$
 rectangles.
 
 \textbf{Remark} You can instead build a data structure with
-$\BigOh{n}$ space and $\BigOh{\lg^{(c + 1)}n + k}$ query time by only
+$\BigOh{n}$ space and $\BigOh{\lg n\cdot\lg^{(c)}n + k}$ query time by only
 taking $c \ge 2$ shallow cuttings.
 
 \begin{theorem}[3.1 in~\cite{rahul2015improved}]\label{thm:31}
