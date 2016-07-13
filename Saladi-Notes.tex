@@ -129,7 +129,7 @@ obtained by $y$-projection instead.  This proves the following:
 \label{sec:4sided}
 
 Given two points $p,q \in \IR^d$, then $p = (p_1, \ldots, p_d)$
-\emph{dominates} $q = (q_1, \ldots, q_d)$ if $p_i > q_i$ for all $i
+\emph{dominates} $q = (q_1, \ldots, q_d)$ if $p_i \ge q_i$ for all $i
 \in \{1, \ldots, d \}$.  Given a set of points $P$, $R$ is a
 \emph{$t$-level shallow cutting} of $P$ if
 %
@@ -148,6 +148,8 @@ rectangles either left or right of $\splt(v)$.
 At every node $v$ of the interval tree, consider each 3-sided
 rectangle as a point, then we can take $\lg^{(i)} n$-level shallow
 cuttings $R_i$ for all $0 \le i \le \lg^* n$.
+
+\textbf{Question} Why $\lg^* n$ levels of shallow cuttings?
 
 \textbf{Local Structure} For each point $p \in R_i$, we
 build~\cite{afshani2008dominance} on all points that dominate $p$.
@@ -238,6 +240,9 @@ can find the grid cell containing $q$ in $\BigOh{\lg n}$ time and the
 size of the subproblem is $\sqrt{nt}$, we get $Q(n) = Q(\sqrt{nt}) +
 \BigOh{\lg n}$.  With $t = \lg^4n$, this solves to $\BigOh{\lg n\lg\lg
   n + k}$ time, and this concludes the proof of Theorem~\ref{thm:51}.
+
+\textbf{Question} Why doesn't it cost $\lg n\cdot\lg^* n$ at every
+level of this grid recursion?
 
 \textbf{Remark} In the RAM model, we can find the grid cell containing
 $q$ in $\BigOh{1}$ time.  This suggests we can achieve $\BigOh{\lg\lg
