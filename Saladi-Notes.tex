@@ -37,10 +37,10 @@
 \begin{document}
 
 {\noindent\Large 5-Sided Orthogonal Point Enclosure}\\
-{\noindent Notes on Rahul 2015, by Simon Pratt}
+{\noindent Notes on Saladi 2015, by Simon Pratt}
 
 The primary intention of these notes is to answer: how
-does~\cite{rahul2015improved} answer 3D 5-sided point enclosure
+does~\cite{saladi2015improved} answer 3D 5-sided point enclosure
 queries?
 
 \paragraph{Orthogonal Point Enclosure Queries (OPEQ)}
@@ -51,7 +51,7 @@ $\IR^3$.  To be precise, our rectangles are of the form
 $\bounds{x_1,x_2} \times \bounds{y_1, y_2} \times
 \lbounds{-\infty,z}$.  In these notes, we will prove the following:
 
-\begin{theorem}[5.1 in~\cite{rahul2015improved}]\label{thm:51}
+\begin{theorem}[5.1 in~\cite{saladi2015improved}]\label{thm:51}
 
   OPEQ on 5-sided rectangles can be answered using a structure of
   $\BigOh{n\lg^* n}$ size and $\BigOh{\lg n \lg\lg n + k}$ query time,
@@ -109,7 +109,7 @@ the same technique to solve 5-sided queries in $\BigOh{\lg^3 n + k}$
 time by storing \D{4} structures at the nodes of the interval tree
 obtained by $y$-projection instead.  This proves the following:
 
-\begin{theorem}[2.1 in~\cite{rahul2015improved}]\label{thm:21}
+\begin{theorem}[2.1 in~\cite{saladi2015improved}]\label{thm:21}
 
   OPEQ on 5-sided rectangles can be answered using a structure of
   $\BigOh{n}$ size and $\BigOh{\lg^3 n + k}$ query time, where $k$
@@ -156,7 +156,7 @@ build~\cite{afshani2008dominance} on all points that dominate $p$.
 Since $p$ is in a $\lg^{(i)} n$-level shallow cutting of $P$, there
 are $\BigOh{\lg^{(i)} n}$ points that dominate $p$.
 
-\begin{lemma}[3.1 in~\cite{rahul2015improved}]\label{lem:31}
+\begin{lemma}[3.1 in~\cite{saladi2015improved}]\label{lem:31}
 
   Given a point set $P$ in $\IR^3$ and a strip $\mathcal{R}$ of the
   plane such that the projection of all points onto the plane falls
@@ -189,7 +189,7 @@ rectangles.
 $\BigOh{n}$ space and $\BigOh{\lg n\cdot\lg^{(c)}n + k}$ query time by only
 taking $c \ge 2$ shallow cuttings.
 
-\begin{theorem}[3.1 in~\cite{rahul2015improved}]\label{thm:31}
+\begin{theorem}[3.1 in~\cite{saladi2015improved}]\label{thm:31}
 
   OPEQ on 4-sided rectangles can be answered using a structure of
   $\BigOh{n\lg^* n}$ size and $\BigOh{\lg n \cdot \lg^* n + k}$
